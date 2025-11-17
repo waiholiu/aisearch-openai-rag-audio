@@ -22,3 +22,4 @@ hooks:
         run: ./scripts/write_env.sh; ./scripts/setup_intvect.sh
         interactive: true
         continueOnError: false
+ 

@@ -5,12 +5,46 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python Debugger: App",
+            "name": "Python: Backend (F5)",
             "type": "debugpy",
             "request": "launch",
             "program": "app.py",
             "console": "integratedTerminal",
-            "cwd": "${workspaceFolder}/app/backend"
+            "cwd": "${workspaceFolder}/app/backend",
+            "python": "${workspaceFolder}/.venv/bin/python",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/app/backend"
+            },
+            "envFile": "${workspaceFolder}/app/backend/.env",
+            "justMyCode": false,
+            "preLaunchTask": "Build Frontend"
+        },
+        {
+            "name": "Python: Backend Only (no frontend build)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "app.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/app/backend",
+            "python": "${workspaceFolder}/.venv/bin/python",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/app/backend"
+            },
+            "envFile": "${workspaceFolder}/app/backend/.env",
+            "justMyCode": false
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Full Stack (Backend + Frontend Dev Server)",
+            "configurations": ["Python: Backend Only (no frontend build)"],
+            "preLaunchTask": "Start Frontend Dev Server",
+            "presentation": {
+                "hidden": false,
+                "group": "fullstack",
+                "order": 1
+            },
+            "stopAll": true
         }
     ]
 }

@@ -19,6 +19,7 @@ function App() {
     const [isRecording, setIsRecording] = useState(false);
     const [groundingFiles, setGroundingFiles] = useState<GroundingFile[]>([]);
     const [selectedFile, setSelectedFile] = useState<GroundingFile | null>(null);
+    const [assistantMessage, setAssistantMessage] = useState<string>("");
 
     const { startSession, addUserAudio, inputAudioBufferClear } = useRealTime({
         onWebSocketOpen: () => console.log("WebSocket connection opened"),
@@ -27,6 +28,9 @@ function App() {
         onReceivedError: message => console.error("error", message),
         onReceivedResponseAudioDelta: message => {
             isRecording && playAudio(message.delta);
+        },
+        onReceivedResponseAudioTranscriptDelta: message => {
+            setAssistantMessage(prev => prev + message.delta);
         },
         onReceivedInputAudioBufferSpeechStarted: () => {
             stopAudioPlayer();
@@ -50,6 +54,7 @@ function App() {
             startSession();
             await startAudioRecording();
             resetAudioPlayer();
+            setAssistantMessage("");
 
             setIsRecording(true);
         } else {
@@ -91,6 +96,12 @@ function App() {
                     </Button>
                     <StatusMessage isRecording={isRecording} />
                 </div>
+                {assistantMessage && (
+                    <div className="mb-4 max-w-2xl rounded-lg bg-white p-4 shadow-md">
+                        <h2 className="mb-2 text-sm font-semibold text-gray-600">Assistant Response:</h2>
+                        <p className="text-gray-800">{assistantMessage}</p>
+                    </div>
+                )}
                 <GroundingFiles files={groundingFiles} onSelected={setSelectedFile} />
             </main>
 

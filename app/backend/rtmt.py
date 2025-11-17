@@ -174,6 +174,11 @@ class RTMiddleTier:
                         session["voice"] = self.voice_choice
                     session["tool_choice"] = "auto" if len(self.tools) > 0 else "none"
                     session["tools"] = [tool.schema for tool in self.tools.values()]
+                    # Enable text modality alongside audio
+                    if "modalities" not in session or session["modalities"] is None:
+                        session["modalities"] = ["text", "audio"]
+                    elif "text" not in session["modalities"]:
+                        session["modalities"].append("text")
                     updated_message = json.dumps(message)
 
         return updated_message
